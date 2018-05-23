@@ -10,7 +10,9 @@
 var canvas;
 var canvasContext;// Dimensions
 var ballX = 50; // x coordinate
-var ballSpeedX = 15;
+var ballY = 50; // y coordinate
+var ballSpeedX = 10;
+var ballSpeedY = 4;
 
 	window.onload = function(){
 		console.log("hello world");
@@ -37,7 +39,14 @@ var ballSpeedX = 15;
 		if(ballX < 0){
 			ballSpeedX = -ballSpeedX;
 		}
+		if(ballY > canvas.height){
+			ballSpeedY = -ballSpeedY;
+		}
+		if(ballY < 0){
+			ballSpeedY = -ballSpeedY;
+		}
 		ballX += ballSpeedX;
+		ballY += ballSpeedY;
 		//ballSpeedX += 1;  //acceleration
 
 	}
@@ -53,9 +62,13 @@ var ballSpeedX = 15;
 		colorRect(790,210,10,100,'white');
 
 		//Draws ball on screen
-		canvasContext.fillStyle = 'red';
+		colorCircle(ballX,ballY,10,'red');
+	}
+
+	function colorCircle(centerX,centerY,radius, dColor){
+		canvasContext.fillStyle = dColor;
 		canvasContext.beginPath();
-		canvasContext.arc(ballX,100,100,0,Math.PI*2,true);//arc(xOfRadius,yOfRadius,radius, angle, radians,clockOrAnti)
+		canvasContext.arc(centerX,centerY,radius,0,Math.PI*2,true);//arc(xOfRadius,yOfRadius,radius, angle, radians,clockOrAnti)
 		canvasContext.fill();
 	}
 
