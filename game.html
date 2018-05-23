@@ -14,6 +14,9 @@ var ballY = 50; // y coordinate
 var ballSpeedX = 10;
 var ballSpeedY = 4;
 
+var paddle1Y = 250;  //position of paddle
+const PADDLE_HEIGHT = 100; //height of paddle constant
+
 	window.onload = function(){
 		console.log("hello world");
 
@@ -29,10 +32,33 @@ var ballSpeedY = 4;
 			draw();
 		}, 1000/framesPerSecond); //call draw function,keep on calling after 1sec
 
+		canvas.addEventListener('mousemove', function(evt){
+				var mousePosition = calculateMousePosition(evt);
+				paddle1Y = mousePosition.y - PADDLE_HEIGHT/2;
+		});
+
 		
 	}
 
+	//returns object literal of coordinates of mouse position
+	//acctually coordinates in accordance to canvas
+	function calculateMousePosition(evt){
+		var rect = canvas.getBoundingClientRect();
+		var root = document.documentElement;
+		var mouseX = evt.clientX - rect.left - root.scrollleft;
+		var mouseY = evt.clientY - rect.top - root.scrollTop;
+
+		return{
+			x:mouseX,
+			y:mouseY
+		}
+	}
+
 	function move(){
+		ballX += ballSpeedX;
+		ballY += ballSpeedY;
+		//ballSpeedX += 1;  //acceleration
+
 		if(ballX > canvas.width){
 			ballSpeedX = -ballSpeedX;
 		}
@@ -45,10 +71,7 @@ var ballSpeedY = 4;
 		if(ballY < 0){
 			ballSpeedY = -ballSpeedY;
 		}
-		ballX += ballSpeedX;
-		ballY += ballSpeedY;
-		//ballSpeedX += 1;  //acceleration
-
+		
 	}
 
 	function draw(){
@@ -56,7 +79,7 @@ var ballSpeedY = 4;
 		colorRect(0,0,canvas.width,canvas.height,'black');
 
 		//Draws left player paddle
-		colorRect(0,210,10,100,'white');
+		colorRect(0,paddle1Y,10,PADDLE_HEIGHT,'white');
 
 		//Draws Right player paddle
 		colorRect(790,210,10,100,'white');
