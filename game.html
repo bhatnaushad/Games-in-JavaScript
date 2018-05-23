@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tennis Game</title>
+</head>
+
+<canvas id="gameCanvas" width="800" height="600"></canvas>
+
+<script>
+var canvas;
+var canvasContext;// Dimensions
+var ballX = 50; // x coordinate
+var ballSpeedX = 15;
+
+	window.onload = function(){
+		console.log("hello world");
+
+		canvas = document.getElementById('gameCanvas');
+		canvasContext = canvas.getContext('2d');
+		//draw();
+
+		var framesPerSecond = 30;
+
+		//We can use inline function if we don't need the function anywhere else 
+		setInterval(function(){
+			move();
+			draw();
+		}, 1000/framesPerSecond); //call draw function,keep on calling after 1sec
+
+		
+	}
+
+	function move(){
+		if(ballX > canvas.width){
+			ballSpeedX = -ballSpeedX;
+		}
+		if(ballX < 0){
+			ballSpeedX = -ballSpeedX;
+		}
+		ballX += ballSpeedX;
+		//ballSpeedX += 1;  //acceleration
+
+	}
+
+	function draw(){
+		//Draws black background
+		colorRect(0,0,canvas.width,canvas.height,'black');
+
+		//Draws left player paddle
+		colorRect(0,210,10,100,'white');
+
+		//Draws Right player paddle
+		colorRect(790,210,10,100,'white');
+
+		//Draws ball on screen
+		canvasContext.fillStyle = 'red';
+		canvasContext.beginPath();
+		canvasContext.arc(ballX,100,100,0,Math.PI*2,true);//arc(xOfRadius,yOfRadius,radius, angle, radians,clockOrAnti)
+		canvasContext.fill();
+	}
+
+	//making a seperate function to make rectangles
+	function colorRect(leftX,topY,width,height,drawColor){
+		canvasContext.fillStyle = drawColor;
+		canvasContext.fillRect(leftX,topY,width,height);
+	}
+
+</script>
+
+</html>
