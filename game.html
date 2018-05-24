@@ -166,6 +166,15 @@ var winningScreen = false;
 		
 	}
 
+
+	function drawNet(){
+		for(var i=0;i<canvas.height;i+=40){
+			colorRect(398,i,4,20,'white');
+		}
+
+
+	}
+
 	function draw(){
 
 		if(winningScreen){
@@ -178,8 +187,12 @@ var winningScreen = false;
 			
 			return;
 		}
+
+
 		//Draws black background
 		colorRect(0,0,canvas.width,canvas.height,'black');
+
+		drawNet();
 
 		//Draws left player paddle
 		colorRect(0,paddle1Y,PADDLE_THICKNESS,PADDLE_HEIGHT,'white');
