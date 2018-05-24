@@ -50,6 +50,13 @@ const WINNING_SCORE = 5;
 	}
 
 	function ballReset(){
+
+		//To reset the scores if a team exceeds the winning score
+		if(player1Score >= WINNING_SCORE || player2Score >= WINNING_SCORE){
+			player1Score = 0;
+			player2Score = 0;
+		}
+
 		ballX = canvas.width/2;
 		ballY = canvas.height/2;
 	}
