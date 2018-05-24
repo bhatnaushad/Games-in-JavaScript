@@ -15,7 +15,14 @@ var ballSpeedX = 10;
 var ballSpeedY = 4;
 
 var paddle1Y = 250;  //position of paddle
+var paddle2Y = 250;
 const PADDLE_HEIGHT = 100; //height of paddle constant
+const PADDLE_THICKNESS = 10;
+
+var player1Score = 0;
+var player2Score = 0;
+
+const WINNING_SCORE = 5;
 
 	window.onload = function(){
 		console.log("hello world");
@@ -34,10 +41,17 @@ const PADDLE_HEIGHT = 100; //height of paddle constant
 
 		canvas.addEventListener('mousemove', function(evt){
 				var mousePosition = calculateMousePosition(evt);
+
+				//to give the mouse control to right paddle temporarily change paddle1Y to paddle2
 				paddle1Y = mousePosition.y - PADDLE_HEIGHT/2;
 		});
 
 		
+	}
+
+	function ballReset(){
+		ballX = canvas.width/2;
+		ballY = canvas.height/2;
 	}
 
 	//returns object literal of coordinates of mouse position
@@ -54,21 +68,75 @@ const PADDLE_HEIGHT = 100; //height of paddle constant
 		}
 	}
 
+	function autoRightPaddleMove(){
+		var paddle2YCentre = paddle2Y + (PADDLE_HEIGHT/2);
+
+		//ballY-35 to prevent paddle2 shaking. Paddle is 100px. 100/2=50. ballY-(can be below 50)
+		if(paddle2YCentre < ballY-35){
+			paddle2Y += 6;
+		} else if(paddle2YCentre > ballY-35){
+			paddle2Y -= 6;
+		}
+	}
+
+
 	function move(){
+
+		autoRightPaddleMove();
+
 		ballX += ballSpeedX;
 		ballY += ballSpeedY;
 		//ballSpeedX += 1;  //acceleration
 
-		if(ballX > canvas.width){
-			ballSpeedX = -ballSpeedX;
-		}
+		
 		if(ballX < 0){
-			ballSpeedX = -ballSpeedX;
+			/*
+				..-----------paddleY
+				..
+				..
+				..-----------paddleY+(PADDLE_HEIGHT/2)
+				..
+				..
+				..-----------paddleY+PADDLE_HEIGHT
+
+			*/
+			if(ballY > paddle1Y && ballY < paddle1Y+PADDLE_HEIGHT){
+				ballSpeedX = -ballSpeedX;
+
+				//Giving ball control. Untill now ball was out of control. Wherever it would hit
+				//paddle it would bounce at same angle.
+				//Now if it hits contre , it will reflect(bounce) straight, away frow centre angle //increases
+				var control = ballY - (paddle1Y+PADDLE_HEIGHT/2);
+				ballSpeedY = control * 0.35;  //* 0.35 to reduce the speed, otherwise the speed would increase highly
+
+
+
+			} else {
+				player2Score += 1;  // must be before reset
+				ballReset();
+			}
 		}
-		if(ballY > canvas.height){
+		if(ballX > canvas.width){
+				if(ballY > paddle2Y && ballY < paddle2Y+PADDLE_HEIGHT){
+				ballSpeedX = -ballSpeedX;
+
+				//Giving ball control. Untill now ball was out of control. Wherever it would hit
+				//paddle it would bounce at same angle.
+				//Now if it hits contre , it will reflect(bounce) straight, away frow centre angle //increases
+				var control = ballY - (paddle2Y+PADDLE_HEIGHT/2);
+				ballSpeedY = control * 0.35;  //* 0.35 to reduce the speed, otherwise the speed would increase highly
+
+			} else {
+				player1Score += 1;
+				ballReset();
+			}
+		}
+
+		
+		if(ballY < 0){
 			ballSpeedY = -ballSpeedY;
 		}
-		if(ballY < 0){
+		if(ballY > canvas.height){
 			ballSpeedY = -ballSpeedY;
 		}
 		
@@ -79,13 +147,18 @@ const PADDLE_HEIGHT = 100; //height of paddle constant
 		colorRect(0,0,canvas.width,canvas.height,'black');
 
 		//Draws left player paddle
-		colorRect(0,paddle1Y,10,PADDLE_HEIGHT,'white');
+		colorRect(0,paddle1Y,PADDLE_THICKNESS,PADDLE_HEIGHT,'white');
 
 		//Draws Right player paddle
-		colorRect(790,210,10,100,'white');
+		colorRect(canvas.width-PADDLE_THICKNESS,paddle2Y,PADDLE_THICKNESS,100,'white');
 
 		//Draws ball on screen
 		colorCircle(ballX,ballY,10,'red');
+
+		//Text for scores
+		canvasContext.fillStyle = 'white';
+		canvasContext.fillText(player1Score, 100, 550);
+		canvasContext.fillText(player2Score, canvas.width-100,550);
 	}
 
 	function colorCircle(centerX,centerY,radius, dColor){
