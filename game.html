@@ -22,7 +22,9 @@ const PADDLE_THICKNESS = 10;
 var player1Score = 0;
 var player2Score = 0;
 
-const WINNING_SCORE = 5;
+const WINNING_SCORE = 3;
+
+var winningScreen = false;
 
 	window.onload = function(){
 		console.log("hello world");
@@ -55,6 +57,7 @@ const WINNING_SCORE = 5;
 		if(player1Score >= WINNING_SCORE || player2Score >= WINNING_SCORE){
 			player1Score = 0;
 			player2Score = 0;
+			winningScreen = true;
 		}
 
 		ballX = canvas.width/2;
@@ -88,6 +91,11 @@ const WINNING_SCORE = 5;
 
 
 	function move(){
+
+		//stop if one player wins
+		if(winningScreen){
+			return;
+		}
 
 		autoRightPaddleMove();
 
@@ -150,6 +158,11 @@ const WINNING_SCORE = 5;
 	}
 
 	function draw(){
+
+		if(winningScreen){
+			canvasContext.fillText("WOUHOO!!!. WON . Click to continue...  ", 200,250)
+			return;
+		}
 		//Draws black background
 		colorRect(0,0,canvas.width,canvas.height,'black');
 
