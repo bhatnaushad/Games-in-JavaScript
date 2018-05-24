@@ -26,6 +26,15 @@ const WINNING_SCORE = 3;
 
 var winningScreen = false;
 
+
+	function handleMouseClick(evt){
+		if(winningScreen){
+			player1Score = 0;
+			player2Score = 0;
+			winningScreen = false;
+		}
+
+	}
 	window.onload = function(){
 		console.log("hello world");
 
@@ -41,6 +50,8 @@ var winningScreen = false;
 			draw();
 		}, 1000/framesPerSecond); //call draw function,keep on calling after 1sec
 
+		canvas.addEventListener('mousedown', handleMouseClick);  //function hamdleMouseClick not made inline
+
 		canvas.addEventListener('mousemove', function(evt){
 				var mousePosition = calculateMousePosition(evt);
 
@@ -55,8 +66,6 @@ var winningScreen = false;
 
 		//To reset the scores if a team exceeds the winning score
 		if(player1Score >= WINNING_SCORE || player2Score >= WINNING_SCORE){
-			player1Score = 0;
-			player2Score = 0;
 			winningScreen = true;
 		}
 
@@ -160,7 +169,13 @@ var winningScreen = false;
 	function draw(){
 
 		if(winningScreen){
-			canvasContext.fillText("WOUHOO!!!. WON . Click to continue...  ", 200,250)
+
+			if(player1Score >= WINNING_SCORE){
+				canvasContext.fillText("YOU WON--Click to continue...  ", 200,250);
+			} else if (player2Score >= WINNING_SCORE){
+				canvasContext.fillText("OPPONENT WON--Click to continue...  ", 200,250);
+			}
+			
 			return;
 		}
 		//Draws black background
